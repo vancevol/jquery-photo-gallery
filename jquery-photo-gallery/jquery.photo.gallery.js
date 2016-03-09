@@ -99,7 +99,7 @@ $.fn.extend({
       	$thumbnails.css({
 			height: o.thumbnailsHeight,
 			width : o.thumbnailsWidth
-	  	}).on("mouseout",function(e){
+	  	}).on("mouseenter",function(e){
   			thumbX = -1;
   	 	}).on("mousedown",function(e){
   	 		thumbX=e.pageX || e.clientX;
@@ -171,10 +171,11 @@ $.fn.extend({
   	  	$gallery.on("mouseover",function(e){
   	  		$tool.show();
   	  	
-  	  	}).on("mouseout",function(e){
-  	  		$tool.hide();
-  			dragX = -1;
-  	  	}).on("mousedown",function(e){
+  	  	}).on("mouseenter",function(e){
+			dragX = -1;
+		}).on("mouseout",function(e){
+			$tool.hide();
+		}).on("mousedown",function(e){
   	 		dragX=e.pageX || e.clientX;
 			dragY=e.pageY || e.clientY;
 
