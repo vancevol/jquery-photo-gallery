@@ -13,6 +13,8 @@ $.fn.extend({
   	
 	photoGallery: function(options) {
 
+		var isFirefox = navigator.userAgent.indexOf("Firefox") > -1 ;
+		var MOUSEWHEEL_EVENT = isFirefox ? "DOMMouseScroll" : "mousewheel";
 		var defaults = {
       		//图片缩放倍率
  	 		ratio : 1.2, 
@@ -291,13 +293,25 @@ $.fn.extend({
   	 	$download.on("click", function(){
   	  		var imgUrl = $image.attr("src");
   	   		if(!imgUrl) return;
-			alert("未实现");
+			alert("没有找到兼容所有浏览器方法，所以暂不实现");
   	  	});
   	  
 	  	$(window).on("resize",function(){
 	  		setImagePosition();
-	  	}).on("mousewheel",function(e){
-	  		var _delta = parseInt(e.originalEvent.wheelDelta || -e.originalEvent.detail);
+	  	});
+		
+		if(document.attachEvent){
+			document.attachEvent("on"+MOUSEWHEEL_EVENT, function(e){
+				mouseWheelScroll(e);
+			});
+		} else if(document.addEventListener){
+			document.addEventListener(MOUSEWHEEL_EVENT, function(e){
+				mouseWheelScroll(e);
+			}, false);
+		}	
+		
+		function mouseWheelScroll(e){
+			var _delta = parseInt(e.wheelDelta || -e.detail);
 	    	//向上滚动
 	  		if (_delta > 0) {
         		biggerImage();
@@ -306,8 +320,8 @@ $.fn.extend({
         	else {
             	smallerImage();
         	}
-	  	});
-	  
+		}
+		
 	  	//键盘左右键
 	  	document.onkeydown = function(e){
 
@@ -323,7 +337,7 @@ $.fn.extend({
 			   	}
 			}
 	 	};
-
+		
 	  	function init(){
   	    	toggleImage();
   	    
@@ -641,7 +655,10 @@ $.extend({
 		});
 		  
 		$(".closeWin").click(function(){
-			window.parent.document.getElementById("J_pg").remove();
+			var _parent =  window.parent || window.top,
+				_jg = _parent.document.getElementById("J_pg");
+				
+			$(_jg).remove();
 		});
 	}
 });
